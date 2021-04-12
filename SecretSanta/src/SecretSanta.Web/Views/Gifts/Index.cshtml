@@ -1,0 +1,29 @@
+@{
+  ViewBag.Title = "SecretSanta";
+  int counter = 0;
+}
+
+<h1>Gifts</h1>
+
+<a asp-controller="Gifts" asp-action="Create">Create</a>
+
+@model List<GiftViewModel>
+
+@foreach(var gift in Model) {
+  <div>
+    @gift.Title - @gift.Description
+    <br>
+    Link: @gift.URL
+    <br>
+    Recipient ID: @gift.UserID
+    <br>
+    Priority: @gift.Priority
+    <div style="text-align: horizontal">
+     <a asp-controller="Gifts" asp-action="Edit" asp-route-id=@counter>Edit</a> 
+      <form asp-controller="Gifts" asp-action="Delete" asp-route-id=@counter method="post" style="display: inline-block">
+        <button>Delete</button>
+      </form>
+    </div>
+    @{counter++;}
+  </div>
+}

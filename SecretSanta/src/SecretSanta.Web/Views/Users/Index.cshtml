@@ -1,11 +1,23 @@
+@{
+   ViewBag.Title = "Users";
+}
+
 @model List<UserViewModel>
 
 @{int counter = 0;}
 
+<div class="grid grid-cols-1 sm:grid-cols-3">
 @foreach(var userViewModel in Model) {
-    <section>
-        @userViewModel.FirstName @userViewModel.LastName <a asp-action="Edit" asp-route-id=@counter>Edit</a><form asp-action="Delete" asp-route-id=@counter method="post"><button>X</button></form>
-        @{counter++;}
-    </section>
+  <a class="grid-item" asp-controller="Users" asp-action="Edit" asp-route-id=@counter>
+    @userViewModel.FirstName @userViewModel.LastName
+    <form asp-controller="Users" asp-action="Delete" asp-route-id=@counter method="post">
+      <button class="btn-red" onclick="return confirm('Delete @userViewModel.FirstName @userViewModel.LastName?')">X</button>
+    </form>
+  </a>
+  counter++;
 }
-<a asp-action="Create">Create</a>
+</div>
+<br>
+<div class="px-4">
+  <a class="btn" asp-action="Create">Create</a>
+</div>

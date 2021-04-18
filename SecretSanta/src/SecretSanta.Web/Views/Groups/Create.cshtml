@@ -1,7 +1,14 @@
+@{
+   ViewBag.Title = "Groups - Create";
+}
+
 @model GroupViewModel
 
 <form asp-controller="Groups" asp-action="Create" method="post">
+  <div class="px-4 py-4">
     @await Html.PartialAsync("_CreateOrEdit")
-    <button>Create</button>
-    <a asp-controller="Groups" asp-action="Index">Cancel</a>
+    <br>
+    <button class="btn">Create</button>
+    <a class="btn-red" asp-controller="Groups" asp-action="Index">Cancel</a>
+  </div>
 </form>

@@ -1,12 +1,14 @@
 @model UserViewModel
 
-<div>
-    <label asp-for="FirstName"></label>
-    <input type="text" asp-for="FirstName" />
+<div class="flex flex-col sm:flex-row sm:space-x-2">
+  <div>
+    <label asp-for="FirstName"></label>:
+    <input type="text" asp-for="FirstName"/>
     <span asp-validation-for="FirstName"></span>
-</div>
-<div>
-    <label asp-for="LastName"></label>
-    <input type="text" asp-for="LastName" />
+  </div>
+  <div>
+    <label asp-for="LastName"></label>:
+    <input type="text" asp-for="LastName"/>
     <span asp-validation-for="LastName"></span>
+  </div>
 </div>

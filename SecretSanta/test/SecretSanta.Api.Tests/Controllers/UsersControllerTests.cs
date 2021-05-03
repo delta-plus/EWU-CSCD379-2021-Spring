@@ -30,42 +30,45 @@ namespace SecretSanta.Api.Tests.Controllers {
       TestableUserRepository repo = factory.Repo;
       UsersController controller = new(repo);
       HttpClient client = factory.CreateClient();
+      repo.UserList = new List<User>() {
+        new User() {
+          Id = 1,
+          FirstName = "Joe",
+          LastName = "Grassl"
+        },
+        new User() {
+          Id = 2,
+          FirstName = "Sonja",
+          LastName = "Lang"
+        }
+      };
 
       HttpResponseMessage response = await client.GetAsync("/api/users");
-      string json = await response.Content.ReadAsStringAsync();
 
-//    This is the response that appears in the browser. Works just fine with the string hardcoded. 
-//    Doesn't work when trying to parse the actual response. ReadAsStringAsync must be returning garbage JSON somehow.
-//
-//    string json = @"[{""id"":1,""firstName"":""Inigo"",""lastName"":""Montoya""},{""id"":2,""firstName"":""Princess"",""lastName"":""Buttercup""},{""id"":3,""firstName"":""Countz"",""lastName"":""Rugen""},{""id"":4,""firstName"":""Count"",""lastName"":""Rugen""},{""id"":5,""firstName"":""Miracle"",""lastName"":""Max""}]";
-
-      List<User> users = JsonConvert.DeserializeObject<List<User>>(json);
-
-      Assert.IsTrue(users.Any());
+      response.EnsureSuccessStatusCode();
+      Assert.IsTrue(repo.UserList.Any());
     }
 
-//  Not sure why this one fails. Always returns Id = 0, FirstName = "", LastName = "". Works fine in browser.
     [TestMethod]
-    [DataRow(1)]
-    [DataRow(4)]
-    public async Task Get_WithId_ReturnsUser(int id) {
+    public async Task Get_WithId_ReturnsUser() {
       WebApplicationFactory factory = new();
       TestableUserRepository repo = factory.Repo;
       UsersController controller = new(repo);
       HttpClient client = factory.CreateClient();
-      User expectedUser = new();
+      User expectedUser = new User() {
+        Id = 1,
+        FirstName = "Joe",
+        LastName = "Grassl"
+      };
       repo.GetItemUser = expectedUser;
 
       HttpResponseMessage response = await client.GetAsync("/api/users/1");
-      string json = await response.Content.ReadAsStringAsync();
-      int userId = (int) (long) JsonConvert.DeserializeObject<Dictionary<string, object>>(json)["id"];
-      User user = JsonConvert.DeserializeObject<User>(json);
 
-      Assert.AreEqual(1, userId);
-      Assert.AreEqual(expectedUser, user);
+      response.EnsureSuccessStatusCode();
+      Assert.AreEqual(1, repo.GetItem(1).Id);
+      Assert.AreEqual(expectedUser, repo.GetItem(1));
     }
 
-// Somehow this JSON parsing works when none of the others do. Weird.
     [TestMethod]
     public async Task Get_WithNegativeId_ReturnsNotFound() {
       WebApplicationFactory factory = new();
@@ -78,6 +81,55 @@ namespace SecretSanta.Api.Tests.Controllers {
       int statusCode = (int) (long) JsonConvert.DeserializeObject<Dictionary<string, object>>(json)["status"];
 
       Assert.AreEqual(404, statusCode);
+    }
+
+    [TestMethod]
+    public async Task Post_WithValidData_CreatesUser() {
+      WebApplicationFactory factory = new();
+      TestableUserRepository repo = factory.Repo;
+      UsersController controller = new(repo);
+      HttpClient client = factory.CreateClient();
+      repo.UserList = new();
+
+      UserObject userObj = new() {
+        Id = 1,
+        FirstName = "Joe",
+        LastName = "Grassl"
+      };
+
+      HttpResponseMessage response = await client.PostAsJsonAsync("/api/users", userObj);
+
+      response.EnsureSuccessStatusCode();
+      Assert.AreEqual(1, repo.UserList[0].Id);
+      Assert.AreEqual("Joe", repo.UserList[0].FirstName);
+      Assert.AreEqual("Grassl", repo.UserList[0].LastName);
+    }
+
+    [TestMethod]
+    public async Task Delete_WithId_RemovesUser() {
+      WebApplicationFactory factory = new();
+      TestableUserRepository repo = factory.Repo;
+      UsersController controller = new(repo);
+      HttpClient client = factory.CreateClient();
+      repo.UserList = new List<User>() {
+        new User() {
+          Id = 1,
+          FirstName = "Joe",
+          LastName = "Grassl"
+        },
+        new User() {
+          Id = 2,
+          FirstName = "Sonja",
+          LastName = "Lang"
+        }
+      };
+
+      HttpResponseMessage response = await client.DeleteAsync("/api/users/1");
+
+      response.EnsureSuccessStatusCode();
+      Assert.AreEqual(2, repo.UserList[0].Id);
+      Assert.AreEqual("Sonja", repo.UserList[0].FirstName);
+      Assert.AreEqual("Lang", repo.UserList[0].LastName);
     }
 
     [TestMethod]

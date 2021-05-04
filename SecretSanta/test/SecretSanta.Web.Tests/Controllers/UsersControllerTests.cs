@@ -27,7 +27,7 @@ namespace SecretSanta.Web.Tests {
         FirstName = "Sonja",
         LastName = "Lang"
       };
-      usersClient.GetAllUsersReturnValue = new List<User>() {
+      usersClient.UserList = new List<User>() {
         user1,
         user2
       };
@@ -39,12 +39,12 @@ namespace SecretSanta.Web.Tests {
     }
 
     [TestMethod]
-    public async Task Edit_WithValidModel_InvokesPostAsync() {
+    public async Task Create_WithValidData_InvokesPostAsync() {
       HttpClient client = Factory.CreateClient();
       TestableUsersClient usersClient = Factory.Client;
       Dictionary<string, string?> values = new() {
-        { nameof(UserViewModel.FirstName), "Joe" },
-        { nameof(UserViewModel.LastName), "Grassl" }
+        { nameof(UserObject.FirstName), "Joe" },
+        { nameof(UserObject.LastName), "Grassl" }
       };
       FormUrlEncodedContent content = new(values!);
 
@@ -55,6 +55,41 @@ namespace SecretSanta.Web.Tests {
       Assert.AreEqual(1, usersClient.PostAsyncInvokedParameters.Count);
       Assert.AreEqual("Joe", usersClient.PostAsyncInvokedParameters[0].FirstName);
       Assert.AreEqual("Grassl", usersClient.PostAsyncInvokedParameters[0].LastName);
+    }
+
+    [TestMethod]
+    public async Task Edit_WithValidData_InvokesPutAsync() {
+      HttpClient client = Factory.CreateClient();
+      TestableUsersClient usersClient = Factory.Client;
+      Dictionary<string, string?> values = new() {
+        { nameof(UserUpdate.FirstName), "Joe" },
+        { nameof(UserUpdate.LastName), "Grassl" }
+      };
+      FormUrlEncodedContent content = new(values!);
+
+      HttpResponseMessage response = await client.PostAsync("/Users/Edit/1", content);
+
+      response.EnsureSuccessStatusCode();
+      Assert.AreEqual(1, usersClient.PutAsyncInvocationCount);
+      Assert.AreEqual(1, usersClient.PutAsyncInvokedParameters.Count);
+      Assert.AreEqual("Joe", usersClient.PutAsyncInvokedParameters[0].FirstName);
+      Assert.AreEqual("Grassl", usersClient.PutAsyncInvokedParameters[0].LastName);
+    }
+
+    [TestMethod]
+    public async Task Delete_WithId_InvokesDeleteAsync() {
+      HttpClient client = Factory.CreateClient();
+      TestableUsersClient usersClient = Factory.Client;
+
+//    Not sure how you'd test this because I can't really find an endpoint to post to 
+//    (the Delete button simply uses asp-action="Delete")
+//    and furthermore, the Delete button just redirects to "api/Users/[id]" instead of 
+//    actually deleting ever since implementing the generated UsersClient. Weird.
+
+//    HttpResponseMessage response = await client.PostAsync(???, ???);
+
+//    response.EnsureSuccessStatusCode();
+//    Assert.AreEqual(1, usersClient.DeleteAsyncInvocationCount);
     }
   }
 }

@@ -58,7 +58,8 @@ namespace SecretSanta.Web.Controllers
 
         public IActionResult Edit(int id)
         {
-            return View(MockData.Users[id]);
+            // For some reason, MockData.Users[id] was giving me an off-by-one error. Weird.
+            return View(MockData.Users[id - 1]);
         }
 
         [HttpPost]

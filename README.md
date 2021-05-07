@@ -1,7 +1,9 @@
 ﻿
 # Assignment 6
 
-![Build Status](.github/workflows/AssignmentBuild.yml/badge.svg)
+![](../../workflows/.NET/badge.svg)
+
+My branch: https://github.com/delta-plus/EWU-CSCD379-2021-Spring/tree/Assignment6
 
 ## Overview
 

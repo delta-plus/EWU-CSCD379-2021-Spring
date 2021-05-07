@@ -1,7 +1,7 @@
 ﻿
 # Assignment 6
 
-![](../../workflows/.NET/badge.svg)
+![](.github/workflows/badge.svg)
 
 My branch: https://github.com/delta-plus/EWU-CSCD379-2021-Spring/tree/Assignment6
 

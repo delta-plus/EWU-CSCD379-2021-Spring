@@ -44,11 +44,6 @@ jobs:
       working-directory: ./SecretSanta/src/SecretSanta.Api/
       run: dotnet build --no-restore
 
-    - name: Test API
-      working-directory: ./SecretSanta/test/SecretSanta.Api.Tests/
-      run: dotnet test --no-build --verbosity normal
-     
-
     - name: Run Npm Build on Web
       working-directory: ./SecretSanta/src/SecretSanta.Web/
       run: |
@@ -58,7 +53,13 @@ jobs:
     - name: Build Web
       run: dotnet build --no-restore
 
+
+    - name: Test API
+      working-directory: ./SecretSanta/test/SecretSanta.Api.Tests/
+      run: dotnet test --no-build --verbosity normal
+      
     - name: Test Web
+      working-directory: ./SecretSanta/test/SecretSanta.Web.Tests/
       run: dotnet test --no-build --verbosity normal
 
 

@@ -27,7 +27,21 @@ jobs:
       working-directory: ./SecretSanta/src/SecretSanta.Api/
       run: dotnet restore
 
+    - name: Restore Web dependencies
+      working-directory: ./SecretSanta/src/SecretSanta.Web/
+      run: dotnet restore
+      
+    - name: Restore API Tests dependencies
+      working-directory: ./SecretSanta/test/SecretSanta.Api.Tests/
+      run: dotnet restore
+
+    - name: Restore Web Tests dependencies
+      working-directory: ./SecretSanta/test/SecretSanta.Web.Tests/
+      run: dotnet restore
+
+
     - name: Build API
+      working-directory: ./SecretSanta/src/SecretSanta.Api/
       run: dotnet build --no-restore
 
     - name: Test API
@@ -39,9 +53,6 @@ jobs:
       run: |
         npm install
         npm run build:prod
-
-    - name: Restore Web dependencies
-      run: dotnet restore
       
     - name: Build Web
       run: dotnet build --no-restore

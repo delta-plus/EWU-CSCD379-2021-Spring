@@ -25,7 +25,9 @@ jobs:
 
     - name: Restore API dependencies
       working-directory: ./SecretSanta/src/SecretSanta.Api/
-      run: dotnet restore
+      run: |
+        dotnet restore
+        MSBuild /t:restore
       
     - name: Build API
       run: dotnet build --no-restore

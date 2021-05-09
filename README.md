@@ -5,6 +5,7 @@
 [![Azure App Service](../../actions/workflows/assignment6_secretsantaserver.yml/badge.svg)](../../actions/workflows/assignment6_secretsantaserver.yml)
 
 My branch: https://github.com/delta-plus/EWU-CSCD379-2021-Spring/tree/Assignment6
+My site: https://secretsantaserver.azurewebsites.net
 
 ## Overview
 

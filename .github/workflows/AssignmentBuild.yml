@@ -23,35 +23,30 @@ jobs:
       run: pwd
 
 
-    - name: Run Npm Build
-      working-directory: ../SecretSanta/src/SecretSanta.Api/
-      run: |
-        npm install
-        npm run build:prod
-
-    - name: Restore dependencies
+    - name: Restore API dependencies
+      working-directory: ./SecretSanta/src/SecretSanta.Api/
       run: dotnet restore
       
-    - name: Build
+    - name: Build API
       run: dotnet build --no-restore
 
-    - name: Test
+    - name: Test API
       run: dotnet test --no-build --verbosity normal
      
 
-    - name: Run Npm Build
+    - name: Run Npm Build on Web
       working-directory: ./SecretSanta/src/SecretSanta.Web/
       run: |
         npm install
         npm run build:prod
 
-    - name: Restore dependencies
+    - name: Restore Web dependencies
       run: dotnet restore
       
-    - name: Build
+    - name: Build Web
       run: dotnet build --no-restore
 
-    - name: Test
+    - name: Test Web
       run: dotnet test --no-build --verbosity normal
 
 

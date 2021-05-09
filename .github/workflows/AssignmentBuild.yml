@@ -24,12 +24,11 @@ jobs:
 
 
     - name: Restore API dependencies
-      working-directory: ./SecretSanta/src/SecretSanta.Api/
-      run: |
-        dotnet restore
-        MSBuild /t:restore
-      
+      working-directory: ./secretsanta/src/secretsanta.Api/
+      run: dotnet restore
+
     - name: Build API
+      working-directory: ./secretsanta/src/secretsanta.Api/
       run: dotnet build --no-restore
 
     - name: Test API

@@ -24,7 +24,7 @@ jobs:
 
 
     - name: Run Npm Build
-      working-directory: SecretSanta/src/SecretSanta.Api/
+      working-directory: ../SecretSanta/src/SecretSanta.Api/
       run: |
         npm install
         npm run build:prod

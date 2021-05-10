@@ -61,6 +61,7 @@ jobs:
       run: npm run build:prod
 
     - name: Build Web
+      working-directory: ./SecretSanta/src/SecretSanta.Web/
       run: dotnet build --no-restore --configuration Release
 
     - name: Publish Web

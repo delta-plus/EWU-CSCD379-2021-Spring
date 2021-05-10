@@ -17,31 +17,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+#    - uses: actions/checkout@v2
  
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
+#    - name: Setup .NET
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: 5.0.x
     - name: Get Directory
       run: pwd
 
 
-    - name: Restore API dependencies
-      working-directory: ./SecretSanta/src/SecretSanta.Api/
-      run: dotnet restore
+#    - name: Restore API dependencies
+#      working-directory: ./SecretSanta/src/SecretSanta.Api/
+#      run: dotnet restore
 
-    - name: Restore Web dependencies
-      working-directory: ./SecretSanta/src/SecretSanta.Web/
-      run: dotnet restore
+#    - name: Restore Web dependencies
+#      working-directory: ./SecretSanta/src/SecretSanta.Web/
+#      run: dotnet restore
       
-    - name: Restore API Tests dependencies
-      working-directory: ./SecretSanta/test/SecretSanta.Api.Tests/
-      run: dotnet restore
+#    - name: Restore API Tests dependencies
+#      working-directory: ./SecretSanta/test/SecretSanta.Api.Tests/
+#      run: dotnet restore
 
-    - name: Restore Web Tests dependencies
-      working-directory: ./SecretSanta/test/SecretSanta.Web.Tests/
-      run: dotnet restore
+#    - name: Restore Web Tests dependencies
+#      working-directory: ./SecretSanta/test/SecretSanta.Web.Tests/
+#      run: dotnet restore
 
 
 #    - name: Build API
@@ -53,20 +53,20 @@ jobs:
 #      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/SecretSantaApi
 
 
-    - name: Run npm install on Web
-      working-directory: ./SecretSanta/src/SecretSanta.Web/
-      run: npm install
-    - name: Run npm build on Web
-      working-directory: ./SecretSanta/src/SecretSanta.Web/
-      run: npm run build:prod
+#    - name: Run npm install on Web
+#      working-directory: ./SecretSanta/src/SecretSanta.Web/
+#      run: npm install
+#    - name: Run npm build on Web
+#      working-directory: ./SecretSanta/src/SecretSanta.Web/
+#      run: npm run build:prod
 
-    - name: Build Web
-      working-directory: ./SecretSanta/src/SecretSanta.Web/
-      run: dotnet build --no-restore --configuration Release
+#    - name: Build Web
+#      working-directory: ./SecretSanta/src/SecretSanta.Web/
+#      run: dotnet build --no-restore --configuration Release
 
-    - name: Publish Web
-      working-directory: ./SecretSanta/src/SecretSanta.Web/
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/SecretSantaServer
+#    - name: Publish Web
+#      working-directory: ./SecretSanta/src/SecretSanta.Web/
+#      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/SecretSantaServer
 
         
 #    - name: Deploy API
@@ -77,10 +77,10 @@ jobs:
 #        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DD29F62399DD451E99A7CD2F3CEE2A64 }}
 #        package: ${{env.DOTNET_ROOT}}/SecretSantaApi
         
-    - name: Deploy Web
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: SecretSantaServer
-        slot-name: Production
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23F1E0F552574BD6B651E282F478C273 }}
-        package: ${{env.DOTNET_ROOT}}/SecretSantaServer
+#    - name: Deploy Web
+#      uses: azure/webapps-deploy@v2
+#      with:
+#        app-name: SecretSantaServer
+#        slot-name: Production
+#        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_23F1E0F552574BD6B651E282F478C273 }}
+#        package: ${{env.DOTNET_ROOT}}/SecretSantaServer

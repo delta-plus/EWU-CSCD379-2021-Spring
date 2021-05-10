@@ -1,8 +1,8 @@
 ﻿
 # Assignment 6
 
-[![Build](../../actions/workflows/Build.yml/badge.svg)](../../actions/workflows/Build.yml)
-[![Azure App Service](../../actions/workflows/Deploy.yml/badge.svg)](../../actions/workflows/Deploy.yml)
+![](../../workflows/Build/badge.svg)
+![](../../workflows/Deploy/badge.svg)
 
 My branch: https://github.com/delta-plus/EWU-CSCD379-2021-Spring/tree/Assignment6
 

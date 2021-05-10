@@ -50,7 +50,7 @@ jobs:
 
     - name: Publish API
       working-directory: ./SecretSanta/src/SecretSanta.Api/
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/SecretSantaServer/Api
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/SecretSantaApi
 
 
     - name: Run npm install on Web

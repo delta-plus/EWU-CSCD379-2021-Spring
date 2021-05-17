@@ -18,7 +18,7 @@ namespace SecretSanta.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var users = await UserClient.GetAllAsync();
+/*          var users = await UserClient.GetAllAsync();
             var userViewModels = users.Select(x => new UserViewModel
             {
                 Id = x.Id,
@@ -26,6 +26,8 @@ namespace SecretSanta.Web.Controllers
                 LastName = x.LastName
             }).ToList();
             return View(userViewModels);
+*/
+            return View();
         }
 
         public IActionResult Create()
@@ -33,7 +35,7 @@ namespace SecretSanta.Web.Controllers
             return View();
         }
 
-        [HttpPost]
+/*      [HttpPost]
         public async Task<IActionResult> Create(UserViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -49,19 +51,21 @@ namespace SecretSanta.Web.Controllers
 
             return View(viewModel);
         }
-
-        public async Task<IActionResult> Edit(int id)
+*/
+        public IActionResult Edit(int id)
         {
-            User user = await UserClient.GetAsync(id);
+/*          User user = await UserClient.GetAsync(id);
             return View(new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName
             });
+*/
+            return View();
         }
 
-        [HttpPost]
+/*      [HttpPost]
         public async Task<IActionResult> Edit(UserViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -83,5 +87,6 @@ namespace SecretSanta.Web.Controllers
             await UserClient.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+*/
     }
 }

@@ -27,7 +27,7 @@ namespace SecretSanta.Web.Tests {
       Assert.IsTrue(response.Ok);
 
       var headerContent = await page.GetTextContentAsync("body > header > div > a");
-      Assert.AreEqual("SecretSanta", headerContent);
+      Assert.AreEqual("Secret Santa", headerContent);
     }
 
     [TestMethod]
@@ -99,9 +99,9 @@ namespace SecretSanta.Web.Tests {
 
       await page.ClickAsync("text=Gifts");
 
-      await page.WaitForSelectorAsync("body > section > section");
+      await page.WaitForSelectorAsync("body > section > section > section");
 
-      var gifts = await page.QuerySelectorAllAsync("body > section > section");
+      var gifts = await page.QuerySelectorAllAsync("body > section > section > section");
       int giftCount = gifts.Count();
 
       await page.ClickAsync("text=Create");
@@ -113,9 +113,9 @@ namespace SecretSanta.Web.Tests {
 
       await page.ClickAsync("text=Create");
 
-      await page.WaitForSelectorAsync("body > section > section");
+      await page.WaitForSelectorAsync("body > section > section > section");
 
-      gifts = await page.QuerySelectorAllAsync("body > section > section");
+      gifts = await page.QuerySelectorAllAsync("body > section > section > section");
       Assert.AreEqual(giftCount + 1, gifts.Count());
     }
 
@@ -134,16 +134,16 @@ namespace SecretSanta.Web.Tests {
 
       await page.ClickAsync("text=Gifts");
 
-      await page.ClickAsync("body > section > section:last-child");
+      await page.ClickAsync("body > section > section > section:last-child");
 
       await page.FillAsync("input#Title", "");
       await page.TypeAsync("input#Title", "Updated Gift");
 
       await page.ClickAsync("text=Update");
 
-      await page.WaitForSelectorAsync("body > section > section");
+      await page.WaitForSelectorAsync("body > section > section > section");
 
-      var giftText = await page.GetTextContentAsync("body > section > section:last-child");
+      var giftText = await page.GetTextContentAsync("body > section > section > section:last-child");
       Assert.IsTrue(giftText.Contains("Updated Gift"));
     }
 
@@ -162,16 +162,16 @@ namespace SecretSanta.Web.Tests {
     
       await page.ClickAsync("text=Gifts");
    
-      await page.WaitForSelectorAsync("body > section > section");
+      await page.WaitForSelectorAsync("body > section > section > section");
 
-      var gifts = await page.QuerySelectorAllAsync("body > section > section");
+      var gifts = await page.QuerySelectorAllAsync("body > section > section > section");
       int giftCount = gifts.Count();
     
       page.Dialog += (_, args) => args.Dialog.AcceptAsync();
     
-      await page.ClickAsync("body > section > section:last-child > a > section > form > button");
+      await page.ClickAsync("body > section > section > section:last-child > a > section > form > button");
     
-      gifts = await page.QuerySelectorAllAsync("body > section > section");
+      gifts = await page.QuerySelectorAllAsync("body > section > section > section");
       Assert.AreEqual(giftCount - 1, gifts.Count());
     }
   }

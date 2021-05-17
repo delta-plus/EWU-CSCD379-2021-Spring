@@ -62,6 +62,18 @@ export function createOrUpdateUser() {
         user: {} as User,
         async create() {
             try {
+                const response = await axios.get(`${apiHost}/api/users`);
+                var topId:number = 0;
+                var i:number = 0;
+
+                for (i; i < response.data.length; i++) {
+                  if (response.data[i].id > topId) {
+                    topId = response.data[i].id;
+                  }
+                }
+
+                this.user.id = topId + 1;
+
                 await axios.post(`${apiHost}/api/users`, this.user);
                 window.location.href="/users";
             } catch (error) {

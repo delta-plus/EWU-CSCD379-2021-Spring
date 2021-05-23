@@ -113,13 +113,14 @@ export function setupGroups() {
     }
 }
 
-export function createOrUpdateGroup() {
+export function alterGroup() {
     return {
         group: {} as Group,
         allUsers: [] as User[],
         selectedUserId: 0,
         isEditing: false,
-        generationError: "",
+        recipients: [] as string[],
+        assignError: "",
 
         async create() {
             try {
@@ -153,6 +154,11 @@ export function createOrUpdateGroup() {
             try {
                 const client = new GroupsClient(apiHost);
                 this.group = await client.get(+id);
+                if (this.group.assignments.length > 0) {
+                    this.group.users.forEach((u) => {
+                        this.getRecipient(u);
+                    });
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -189,6 +195,30 @@ export function createOrUpdateGroup() {
                 console.log(error);
             }
             await this.loadGroup();
+        },
+        async assignUsers(currentGroupId: number) {
+            try {
+                this.assignError = "";
+                var client = new GroupsClient(apiHost);
+                await client.assign(currentGroupId);
+            } catch (error) {
+                this.assignError = error;
+                console.log(error);
+            }
+            await this.loadGroup();
+        },
+        getRecipient(user: User) {
+            try {
+                if (this.group.assignments.length > 0) {
+                    this.group.assignments.forEach((a) => {
+                        if (a.giver!.firstName == user.firstName && a.giver!.lastName == user.lastName) {
+                            this.recipients[user.id] = a.receiver!.firstName + " " + a.receiver!.lastName;
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }

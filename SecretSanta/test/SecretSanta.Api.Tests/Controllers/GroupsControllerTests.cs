@@ -222,7 +222,7 @@ namespace SecretSanta.Api.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateAssignments_WithSuccess_ReturnsOk()
+        public async Task Assign_WithSuccess_ReturnsOk()
         {
             //Arrange
             using WebApplicationFactory factory = new();
@@ -237,17 +237,18 @@ namespace SecretSanta.Api.Tests.Controllers
             HttpClient client = factory.CreateClient();
 
             //Act
-            HttpResponseMessage response = await client.PutAsJsonAsync("/api/groups/42/assign", new Dto.UpdateGroup
-            {
-                Name = "Changed"
-            });
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/groups/42/assign", 42);
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
+        // Used NotFound response instead of BadRequest because it seems more appropriate.
+        // The only two possible error cases are where the Group ID doesn't exist or
+        // where the required number of Users doesn't exist. As these cases have nothing
+        // to do with a malformed request, NotFound makes more sense.
         [TestMethod]
-        public async Task CreateAssignments_WithError_ReturnsBadRequest()
+        public async Task Assign_WithError_ReturnsNotFound()
         {
             //Arrange
             using WebApplicationFactory factory = new();
@@ -262,13 +263,10 @@ namespace SecretSanta.Api.Tests.Controllers
             HttpClient client = factory.CreateClient();
 
             //Act
-            HttpResponseMessage response = await client.PutAsJsonAsync("/api/groups/42/assign", new Dto.UpdateGroup
-            {
-                Name = "Changed"
-            });
+            HttpResponseMessage response = await client.PostAsJsonAsync("/api/groups/42/assign", 42);
 
             //Assert
-            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

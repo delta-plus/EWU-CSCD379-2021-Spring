@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic;
 using SecretSanta.Business;
 
@@ -108,6 +109,18 @@ namespace SecretSanta.Api.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+
+        [HttpPost("{id}/assign")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        public ActionResult Assign(int id)
+        {
+            var result = GroupRepository.Assign(id);
+            if (result.IsSuccess) {
+                return Ok();
+            }
+            return NotFound(result.ErrorMessage);
         }
     }
 }

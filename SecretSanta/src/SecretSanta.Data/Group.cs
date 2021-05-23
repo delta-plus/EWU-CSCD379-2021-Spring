@@ -8,6 +8,6 @@ namespace SecretSanta.Data
         public string Name { get; set; } = "";
 
         public List<User> Users { get; } = new();
-        public List<Assignment> Assignments { get; } = new();
+        public List<Assignment> Assignments { get; set; } = new();
     }
 }

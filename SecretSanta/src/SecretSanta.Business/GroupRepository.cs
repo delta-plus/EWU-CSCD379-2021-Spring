@@ -47,10 +47,9 @@ namespace SecretSanta.Business
             using DbContext dbContext = new DbContext();
 
             User user = dbContext.Users.Find(id);
-
             dbContext.Users.Remove(user);
 
-            dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
 
             return true;
         }
@@ -102,6 +101,7 @@ namespace SecretSanta.Business
             using DbContext dbContext = new DbContext();
 
             Group group = dbContext.Groups.Find(groupId);
+            dbContext.Groups.Remove(group);
 
             if (group is null)
             {
@@ -132,8 +132,12 @@ namespace SecretSanta.Business
             for(int i = 0; i < users.Count; i++)
             {
                 int endIndex = (i + 1) % users.Count;
-                group.GroupAssignment[0].Assignments.Add(new Assignment(users[i], users[endIndex]));
+                group.Assignments.Add(new Assignment(users[i], users[endIndex]));
             }
+
+            dbContext.Groups.Add(group);
+
+            dbContext.SaveChanges();
 
             return AssignmentResult.Success();
         }

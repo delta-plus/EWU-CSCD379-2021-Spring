@@ -40,6 +40,13 @@ namespace SecretSanta.Business
         public bool Remove(int id)
         {
 //            return MockData.Users.Remove(id);
+            using DbContext dbContext = new DbContext();
+
+            User user = dbContext.Users.Find(id);
+            dbContext.Users.Remove(user);
+
+            dbContext.SaveChanges();
+
             return true;
         }
 

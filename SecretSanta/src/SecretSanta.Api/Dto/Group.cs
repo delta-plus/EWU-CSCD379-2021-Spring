@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using SecretSanta.Data;
 
 namespace SecretSanta.Api.Dto
 {
@@ -21,18 +23,16 @@ namespace SecretSanta.Api.Dto
             };
             if (includeChildObjects)
             {
-//                foreach(Data.User? user in group.GroupUser.SelectMany(item => item.Users).ToList())
-                foreach(Data.User? user in group.GroupUser[0].Users)
+                foreach(Data.User? user in group.Users)
                 {
-                    rv.Name += "Z";
                     if (User.ToDto(user) is { } dtoUser)
                     {
                         rv.Users.Add(dtoUser);
                     }
                 }
-                foreach(Data.Assignment? assignent in group.Assignments)
+                foreach(Data.Assignment? assignment in group.Assignments)
                 {
-                    if (Assignment.ToDto(assignent) is { } dtoAssignment)
+                    if (Assignment.ToDto(assignment) is { } dtoAssignment)
                     {
                         rv.Assignments.Add(dtoAssignment);
                     }

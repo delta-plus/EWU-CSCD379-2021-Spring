@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 
 namespace SecretSanta.Api.Dto
 {
@@ -10,7 +11,7 @@ namespace SecretSanta.Api.Dto
         public List<User> Users { get; } = new();
         public List<Assignment> Assignments { get; } = new();
 
-        public static Group? ToDto(Data.Group? group, bool includeChildObjects = false)
+        public static Group? ToDto(Data.Group? group, bool includeChildObjects = true)
         {
             if (group is null) return null;
             var rv = new Group
@@ -20,8 +21,10 @@ namespace SecretSanta.Api.Dto
             };
             if (includeChildObjects)
             {
-                foreach(Data.User? user in group.Users)
+//                foreach(Data.User? user in group.GroupUser.SelectMany(item => item.Users).ToList())
+                foreach(Data.User? user in group.GroupUser[0].Users)
                 {
+                    rv.Name += "Z";
                     if (User.ToDto(user) is { } dtoUser)
                     {
                         rv.Users.Add(dtoUser);

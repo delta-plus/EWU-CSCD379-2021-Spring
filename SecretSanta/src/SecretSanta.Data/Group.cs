@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecretSanta.Data
 {
@@ -7,7 +9,27 @@ namespace SecretSanta.Data
         public int Id { get; set; }
         public string Name { get; set; } = "";
 
-        public List<User> Users { get; } = new();
-        public List<Assignment> Assignments { get; } = new();
+        [NotMapped]
+        public List<User> Users
+        {
+            get
+            {
+                return GroupUser.SelectMany(item => item.Users).ToList();
+            }
+
+        }
+
+        [NotMapped]
+        public List<Assignment> Assignments
+        {
+            get
+            {
+                return GroupAssignment.SelectMany(item => item.Assignments).ToList();
+            }
+
+        }
+
+        public List<GroupUser> GroupUser = new();
+        public List<GroupAssignment> GroupAssignment = new();
     }
 }

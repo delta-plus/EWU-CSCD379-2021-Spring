@@ -16,6 +16,8 @@ namespace SecretSanta.Api
             using DbContext dbContext = new DbContext();
 
             // Seed data goes here.
+            // For some reason, this creates a database file of the same size as the one in test project,
+            // but this one has no data in it. How is that even possible?
             var users = new[]
             {
                 new User

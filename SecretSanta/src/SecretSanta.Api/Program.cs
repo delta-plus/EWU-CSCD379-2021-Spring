@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Data;
+using DbContext = SecretSanta.Data.DbContext;
 
 namespace SecretSanta.Api
 {
@@ -11,8 +13,7 @@ namespace SecretSanta.Api
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            using SecretSanta.Data.DbContext dbContext = new SecretSanta.Data.DbContext();
-            dbContext.Database.Migrate();
+            using DbContext dbContext = new DbContext();
 
             // Seed data goes here.
             var users = new[]

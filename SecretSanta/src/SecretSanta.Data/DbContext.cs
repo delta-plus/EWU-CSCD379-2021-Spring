@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Text.Json;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using DbContext = SecretSanta.Data.DbContext;
 
 namespace SecretSanta.Data
@@ -22,10 +25,25 @@ namespace SecretSanta.Data
         public Microsoft.EntityFrameworkCore.DbSet<Group> Groups => Set<Group>();
         public Microsoft.EntityFrameworkCore.DbSet<Gift> Gifts => Set<Gift>();
         public Microsoft.EntityFrameworkCore.DbSet<Assignment> Assignments => Set<Assignment>();
-//        public Microsoft.EntityFrameworkCore.DbSet<GroupUser> GroupUsers => Set<GroupUser>();
-//        public Microsoft.EntityFrameworkCore.DbSet<GroupAssignment> GroupAssignments => Set<GroupAssignment>();
 
-        private StreamWriter LogStream { get; } = new StreamWriter("db.log", append: true);
+        private StreamWriter LogStream { get; } = new StreamWriter(
+            Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "db.log"), append: true);
+
+// Kept getting "Invalid token '=' in class, record, struct, or interface member declaration" on this.
+// No idea why. Would have used it otherwise.
+/*      Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.File(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "db.log"))
+            .CreateLogger();
+
+        public static readonly ILoggerFactory DbLoggerFactory = LoggerFactory.Create(builder => { 
+            builder
+                .AddSerilog(logger: Log.Logger)
+                .AddFilter("Microsoft", LogLevel.Warning)
+                .AddFilter("System", LogLevel.Warning)
+                .AddFilter("SecretSanta.Data.DbContext", LogLevel.Debug)
+                .AddEventLog(); 
+        }); */
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,8 +51,10 @@ namespace SecretSanta.Data
             {
                 throw new ArgumentNullException(nameof(optionsBuilder));
             }
-
+ 
             optionsBuilder.LogTo(LogStream.WriteLine);
+//            .UseLoggerFactory(DbLoggerFactory)
+//            .UseSqlite("Data Source=main.db");
         }
 
         public override void Dispose()
@@ -57,144 +77,62 @@ namespace SecretSanta.Data
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
+//            modelBuilder.Entity<User>()
+//                .HasMany(user => user.Gifts)
+//                .WithOne(gift => gift.Receiver);
+
+//            modelBuilder.Entity<User>()
+//                .HasMany(user => user.Groups)
+//                .WithMany(group => group.Users);
+
+//            modelBuilder.Entity<Group>()
+//                .HasMany(group => group.Users)
+//                .WithMany(user => user.Groups);
+
+//            modelBuilder.Entity<Group>()
+//                .HasMany(group => group.Assignments)
+//                .WithOne(assignment => assignment.Group);
+
             modelBuilder.Entity<User>().HasAlternateKey(user => new { user.FirstName, user.LastName });
             modelBuilder.Entity<Group>().HasAlternateKey(group => new { group.Name });
             modelBuilder.Entity<Gift>().HasAlternateKey(gift => new { gift.Title });
             modelBuilder.Entity<Assignment>().HasAlternateKey(assignment => new { assignment.GiverName });
-//            modelBuilder.Entity<GroupUser>().HasKey(item => new { item.GroupId, item.UserId });
 
             // Just got to help EntityFramework figure out what it's looking at.
-            modelBuilder.Entity<Assignment>()
-                .Property(x => x.Giver)
+            modelBuilder.Entity<User>()
+                .Property(user => user.Groups)
                 .HasConversion(
-                    y => JsonSerializer.Serialize(y, null),
-                    y => JsonSerializer.Deserialize<User>(y, null)
+                    groups => JsonSerializer.Serialize(groups, null),
+                    groups => JsonSerializer.Deserialize<List<Group>>(groups, null)
+                );
+
+            modelBuilder.Entity<Group>()
+                .Property(group => group.Users)
+                .HasConversion(
+                    users => JsonSerializer.Serialize(users, null),
+                    users => JsonSerializer.Deserialize<List<User>>(users, null)
+                );
+
+            modelBuilder.Entity<Group>()
+                .Property(group => group.Assignments)
+                .HasConversion(
+                    assignments => JsonSerializer.Serialize(assignments, null),
+                    assignments => JsonSerializer.Deserialize<List<Assignment>>(assignments, null)
                 );
 
             modelBuilder.Entity<Assignment>()
-                .Property(x => x.Receiver)
+                .Property(assignment => assignment.Giver)
                 .HasConversion(
-                    y => JsonSerializer.Serialize(y, null),
-                    y => JsonSerializer.Deserialize<User>(y, null)
+                    giver => JsonSerializer.Serialize(giver, null),
+                    giver => JsonSerializer.Deserialize<User>(giver, null)
                 );
 
-/*
-            // Seed data goes here.
-            var users = new[]
-            {
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Inigov",
-                    LastName = "Montoyav"
-                },
-                new User
-                {
-                    Id = 2,
-                    FirstName = "Princess",
-                    LastName = "Buttercup"
-                },
-                new User
-                {
-                    Id = 3,
-                    FirstName = "Prince",
-                    LastName = "Humperdink"
-                },
-                new User
-                {
-                    Id = 4,
-                    FirstName = "Count",
-                    LastName = "Rugen"
-                },
-                new User
-                {
-                    Id = 5,
-                    FirstName = "Miracle",
-                    LastName = "Max"
-                }
-            };
-
-            var groups = new[]
-            {
-                new Group
-                {
-                    Id = 1,
-                    Name = "IntelliTect Christmas Party",
-                },
-                new Group
-                {
-                    Id = 2,
-                    Name = "Friends",
-                }
-            };
-
-            var groupUsers = new[]
-            {
-              new GroupUser
-              {
-                  Id = 1,
-                  GroupId = 1,
-                  UserId = 1
-              },
-              new GroupUser
-              {
-                  Id = 2,
-                  GroupId = 1,
-                  UserId = 2
-              },
-              new GroupUser
-              {
-                  Id = 3,
-                  GroupId = 1,
-                  UserId = 3
-              },
-              new GroupUser
-              {
-                  Id = 4,
-                  GroupId = 1,
-                  UserId = 4
-              },
-              new GroupUser
-              {
-                  Id = 5,
-                  GroupId = 1,
-                  UserId = 5
-              },
-              new GroupUser
-              {
-                  Id = 6,
-                  GroupId = 2,
-                  UserId = 1
-              },
-              new GroupUser
-              {
-                  Id = 7,
-                  GroupId = 2,
-                  UserId = 2
-              },
-              new GroupUser
-              {
-                  Id = 8,
-                  GroupId = 2,
-                  UserId = 3
-              },
-              new GroupUser
-              {
-                  Id = 9,
-                  GroupId = 2,
-                  UserId = 4
-              },
-              new GroupUser
-              {
-                  Id = 10,
-                  GroupId = 2,
-                  UserId = 5
-              },
-            };
-
-            modelBuilder.Entity<User>().HasData(users);
-            modelBuilder.Entity<Group>().HasData(groups);
-            modelBuilder.Entity<GroupUser>().HasData(groupUsers); */
+            modelBuilder.Entity<Assignment>()
+                .Property(assignment => assignment.Receiver)
+                .HasConversion(
+                    receiver => JsonSerializer.Serialize(receiver, null),
+                    receiver => JsonSerializer.Deserialize<User>(receiver, null)
+                );
         }
     }
 }

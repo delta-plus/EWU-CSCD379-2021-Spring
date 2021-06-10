@@ -9,7 +9,7 @@ namespace SecretSanta.Data
         public User Giver { get; }
         public User Receiver { get; }
         public string GiverName { get; }
-        public List<Group> Groups { get; set; }
+        public Group Group { get; set; }
 
         public Assignment(User giver, User receiver)
         {

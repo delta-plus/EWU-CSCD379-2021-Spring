@@ -9,6 +9,7 @@ namespace SecretSanta.Business
         User? GetItem(int id);
         bool Remove(int id);
         User Create(User item);
+        Gift CreateGift(Gift item);
         void Save(User item);
     }
 

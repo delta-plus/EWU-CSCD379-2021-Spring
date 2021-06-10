@@ -13,7 +13,7 @@ namespace SecretSanta.Data
         // each class contains a "collection navigation property", which is 
         // Microsoft's typically-overly-fancy way of saying "a List of the other object".
         // As far as I can tell, there's no need to use an intermediate class like "GroupUser".
-        public List<User> Users { get; set; }
-        public List<Assignment> Assignments { get; set; }
+        public List<User> Users { get; set; } = new();
+        public List<Assignment> Assignments { get; set; } = new();
     }
 }

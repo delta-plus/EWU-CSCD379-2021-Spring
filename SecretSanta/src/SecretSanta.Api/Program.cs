@@ -11,7 +11,6 @@ namespace SecretSanta.Api
         public static void Main(string[] args)
         {
             DataSeeder.Seed();
-
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -13,7 +13,7 @@ export interface IGroupsClient {
     getAll(): Promise<Group[]>;
     post(group: Group): Promise<Group>;
     get(id: number): Promise<Group>;
-    delete(id: number): Promise<void>;
+    delete(id: number, groupId: number | undefined): Promise<void>;
     put(id: number, group: UpdateGroup): Promise<void>;
     remove(id: number, userId: number): Promise<void>;
     add(id: number, userId: number): Promise<void>;
@@ -191,11 +191,15 @@ export class GroupsClient implements IGroupsClient {
         return Promise.resolve<Group>(<any>null);
     }
 
-    delete(id: number , cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Groups/{id}";
+    delete(id: number, groupId: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Groups/{id}?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (groupId === null)
+            throw new Error("The parameter 'groupId' cannot be null.");
+        else if (groupId !== undefined)
+            url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{

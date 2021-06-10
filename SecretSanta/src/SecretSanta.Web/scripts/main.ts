@@ -8,7 +8,7 @@ import { fas, faThList } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 
-import { Group, GroupsClient, User, UsersClient } from '../Api/SecretSanta.Api.Client.g';
+import { Group, GroupsClient, User, UsersClient, Gift } from '../Api/SecretSanta.Api.Client.g';
 
 library.add(fas, far, fab);
 dom.watch();
@@ -57,6 +57,7 @@ export function setupUsers() {
 export function createOrUpdateUser() {
     return {
         user: {} as User,
+        gifts: [] as Gift[],
         async create() {
             try {
                 const client = new UsersClient(apiHost);
@@ -75,12 +76,31 @@ export function createOrUpdateUser() {
                 console.log(error);
             }
         },
+        async addGift(currentGift: Gift) {
+            try {
+                const client = new UsersClient(apiHost);
+                this.user.gifts.push(currentGift); 
+                await client.put(this.user.id, this.user);
+                await this.loadData();
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async deleteGift(currentGift: Gift) {
+            if (confirm(`Are you sure you want to delete ${currentGift.title}?`)) {
+                const client = new UsersClient(apiHost);
+                this.user.gifts = this.user.gifts.filter(x => x !== currentGift);
+                await client.put(this.user.id, this.user);
+                await this.loadData();
+            }
+        },
         async loadData() {
             const pathnameSplit = window.location.pathname.split('/');
             const id = pathnameSplit[pathnameSplit.length - 1];
             try {
                 const client = new UsersClient(apiHost);
                 this.user = await client.get(+id);
+                this.gifts = this.user.gifts;
             } catch (error) {
                 console.log(error);
             }

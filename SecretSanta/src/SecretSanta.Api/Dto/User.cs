@@ -5,15 +5,17 @@
         public int Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public List<Gift> Gifts { get; set; } = new();
 
         public static User? ToDto(Data.User? user)
         {
             if (user is null) return null;
             return new User
             {
-                FirstName = user.FirstName,
                 Id = user.Id,
-                LastName = user.LastName
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Gifts = Gift.ToDto(user.Gifts);
             };
         }
 
@@ -24,7 +26,8 @@
             {
                 Id = user.Id,
                 FirstName = user.FirstName ?? "",
-                LastName = user.LastName ?? ""
+                LastName = user.LastName ?? "",
+                Gifts = Gift.FromDto(user.Gifts) ?? new List<Gift>();
             };
         }
     }

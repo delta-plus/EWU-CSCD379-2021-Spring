@@ -13,17 +13,33 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-//            MockData.Users[item.Id] = item;
+            using DbContext dbContext = new DbContext();
+
+            dbContext.Users.Add(item);
+
+            dbContext.SaveChanges();
+
+            return item;
+        }
+
+        public User CreateGift(Gift item)
+        {
+            if (item is null)
+            {
+                throw new System.ArgumentNullException(nameof(item));
+            }
+
+            using DbContext dbContext = new DbContext();
+
+            dbContext.Gifts.Add(item);
+
+            dbContext.SaveChanges();
+
             return item;
         }
 
         public User? GetItem(int id)
         {
-//            if (MockData.Users.TryGetValue(id, out User? user))
-//            {
-//                return user;
-//            }
-//            return null;
             using DbContext dbContext = new DbContext();
 
             return dbContext.Users.Find(id);
@@ -31,7 +47,6 @@ namespace SecretSanta.Business
 
         public ICollection<User> List()
         {
-//            return MockData.Users.Values;
             using DbContext dbContext = new DbContext();
 
             return dbContext.Users.ToList();
@@ -39,10 +54,10 @@ namespace SecretSanta.Business
 
         public bool Remove(int id)
         {
-//            return MockData.Users.Remove(id);
             using DbContext dbContext = new DbContext();
 
             User user = dbContext.Users.Find(id);
+
             dbContext.Users.Remove(user);
 
             dbContext.SaveChanges();
@@ -57,7 +72,13 @@ namespace SecretSanta.Business
                 throw new System.ArgumentNullException(nameof(item));
             }
 
-//            MockData.Users[item.Id] = item;
+            using DbContext dbContext = new DbContext();
+
+            User user = dbContext.Users.Find(item.Id);
+            dbContext.Users.Remove(user);
+            dbContext.Users.Add(item);
+
+            dbContext.SaveChanges();           
         }
     }
 }

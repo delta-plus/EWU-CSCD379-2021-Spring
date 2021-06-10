@@ -13,21 +13,17 @@ namespace SecretSanta.Business
             {
                 throw new ArgumentNullException(nameof(item));
             }
+            using DbContext dbContext = new DbContext();
 
-//            MockData.Groups[item.Id] = item;
+            dbContext.Groups.Add(item);
+
+            dbContext.SaveChanges();
 
             return item;
         }
 
         public Group? GetItem(int id)
         {
-        /*
-            if (MockData.Groups.TryGetValue(id, out Group? user))
-            {
-                return user;
-            }
-            return null;
-        */
             using DbContext dbContext = new DbContext();
 
             return dbContext.Groups.Find(id);
@@ -35,19 +31,18 @@ namespace SecretSanta.Business
 
         public ICollection<Group> List()
         {
-//            return MockData.Groups.Values;
             using DbContext dbContext = new DbContext();
 
             return dbContext.Groups.ToList();
         }
 
-        public bool Remove(int id)
+        public bool Remove(int id, int groupId)
         {
-//            return MockData.Groups.Remove(id);
             using DbContext dbContext = new DbContext();
 
             User user = dbContext.Users.Find(id);
-            dbContext.Users.Remove(user);
+            Group group = dbContext.Groups.Find(groupId);
+            group.Users.Remove(user);
 
             dbContext.SaveChanges();
 
@@ -61,47 +56,20 @@ namespace SecretSanta.Business
                 throw new ArgumentNullException(nameof(item));
             }
 
-//            MockData.Groups[item.Id] = item;
+            using DbContext dbContext = new DbContext();
+
+            Group group = dbContext.Groups.Find(item.Id);
+            dbContext.Groups.Remove(group);
+            dbContext.Groups.Add(item);
+
+            dbContext.SaveChanges();
         }
 
         public AssignmentResult GenerateAssignments(int groupId)
         {
-/*
-            if (!MockData.Groups.TryGetValue(groupId, out Group? group))
-            {
-                return AssignmentResult.Error("Group not found");
-            }
-
-            Random random = new();
-            var groupUsers = new List<User>(group.Users);
-
-            if (groupUsers.Count < 3)
-            {
-                return AssignmentResult.Error($"Group {group.Name} must have at least three users");
-            }
-
-            var users = new List<User>();
-            //Put the users in a random order
-            while(groupUsers.Count > 0)
-            {
-                int index = random.Next(groupUsers.Count);
-                users.Add(groupUsers[index]);
-                groupUsers.RemoveAt(index);
-            }
-
-            //The assignments are created by linking the current user to the next user.
-            group.Assignments.Clear();
-            for(int i = 0; i < users.Count; i++)
-            {
-                int endIndex = (i + 1) % users.Count;
-                group.Assignments.Add(new Assignment(users[i], users[endIndex]));
-            }
-            return AssignmentResult.Success();
-*/
             using DbContext dbContext = new DbContext();
 
             Group group = dbContext.Groups.Find(groupId);
-            dbContext.Groups.Remove(group);
 
             if (group is null)
             {
@@ -135,7 +103,7 @@ namespace SecretSanta.Business
                 group.Assignments.Add(new Assignment(users[i], users[endIndex]));
             }
 
-            dbContext.Groups.Add(group);
+            dbContext.Groups.Update(group);
 
             dbContext.SaveChanges();
 

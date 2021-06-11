@@ -57,7 +57,9 @@ export function setupUsers() {
 export function createOrUpdateUser() {
     return {
         user: {} as User,
+        gift: {} as Gift,
         gifts: [] as Gift[],
+
         async create() {
             try {
                 const client = new UsersClient(apiHost);
@@ -76,10 +78,26 @@ export function createOrUpdateUser() {
                 console.log(error);
             }
         },
-        async addGift(currentGift: Gift) {
+        async addGift() {
             try {
                 const client = new UsersClient(apiHost);
-                this.user.gifts.push(currentGift); 
+
+/*              var title:string = (<HTMLInputElement>document.getElementById("Title")).value;
+                var desc:string = (<HTMLInputElement>document.getElementById("Description")).value;
+                var url:string = (<HTMLInputElement>document.getElementById("Url")).value;
+                var priority:number = +(<HTMLInputElement>document.getElementById("Number")).value;
+
+                const newGift = new Gift ({
+                    id: this.user.gifts.length,
+                    title: title,
+                    description: desc,
+                    url: url,
+                    priority: +priority,
+                    receiver: this.user
+                }); */
+                this.gift.id = this.user.gifts.length;
+                this.gift.receiver = this.user;
+                this.user.gifts.push(this.gift); 
                 await client.put(this.user.id, this.user);
                 await this.loadData();
             } catch (error) {

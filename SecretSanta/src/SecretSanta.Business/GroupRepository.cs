@@ -36,13 +36,12 @@ namespace SecretSanta.Business
             return dbContext.Groups.ToList();
         }
 
-        public bool Remove(int id, int groupId)
+        public bool Remove(int id)
         {
             using DbContext dbContext = new DbContext();
 
-            User user = dbContext.Users.Find(id);
-            Group group = dbContext.Groups.Find(groupId);
-            group.Users.Remove(user);
+            Group group = dbContext.Groups.Find(id);
+            dbContext.Groups.Remove(group);
 
             dbContext.SaveChanges();
 

@@ -51,14 +51,14 @@ namespace SecretSanta.Api.Controllers
         {
             return Dto.User.ToDto(Repository.Create(Dto.User.FromDto(user)!));
         }
-
+/*
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(Dto.Gift), (int)HttpStatusCode.OK)]
         public ActionResult<Dto.Gift?> Post([FromBody] Dto.Gift gift)
         {
             return Dto.Gift.ToDto(Repository.CreateGift(Dto.Gift.FromDto(gift)!));
-        }
+        } */
 
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -71,7 +71,7 @@ namespace SecretSanta.Api.Controllers
             {
                 foundUser.FirstName = user?.FirstName ?? "";
                 foundUser.LastName = user?.LastName ?? "";
-                foundUser.Gifts = user?.Gifts ?? new List<Data.Gift>();
+                foundUser.Gifts = Dto.Gift.FromDtos(user?.Gifts) ?? null;
 
                 Repository.Save(foundUser);
                 return Ok();

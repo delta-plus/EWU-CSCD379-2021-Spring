@@ -1,4 +1,7 @@
-﻿namespace SecretSanta.Api.Dto
+﻿using System.Collections.Generic;
+using SecretSanta.Data;
+
+namespace SecretSanta.Api.Dto
 {
     public class User
     {
@@ -15,7 +18,7 @@
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Gifts = Gift.ToDto(user.Gifts);
+                Gifts = Gift.ToDtos(user.Gifts)
             };
         }
 
@@ -27,7 +30,7 @@
                 Id = user.Id,
                 FirstName = user.FirstName ?? "",
                 LastName = user.LastName ?? "",
-                Gifts = Gift.FromDto(user.Gifts) ?? new List<Gift>();
+                Gifts = Gift.FromDtos(user.Gifts) ?? null
             };
         }
     }

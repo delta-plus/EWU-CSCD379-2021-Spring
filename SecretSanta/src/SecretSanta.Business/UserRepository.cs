@@ -22,7 +22,7 @@ namespace SecretSanta.Business
             return item;
         }
 
-        public User CreateGift(Gift item)
+        public Gift CreateGift(Gift item)
         {
             if (item is null)
             {

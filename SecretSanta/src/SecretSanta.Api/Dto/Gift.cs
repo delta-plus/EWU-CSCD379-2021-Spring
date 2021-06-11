@@ -1,4 +1,6 @@
-﻿namespace SecretSanta.Data
+﻿using System.Collections.Generic;
+
+namespace SecretSanta.Api.Dto
 {
     public class Gift
     {
@@ -19,8 +21,20 @@
                 Description = gift.Description,
                 Url = gift.Url,
                 Priority = gift.Priority,
-                Receiver = gift.Receiver
+                Receiver = User.ToDto(gift.Receiver)
             };
+        }
+
+        public static List<Gift?> ToDtos(List<Data.Gift?> gifts)
+        {
+            if (gifts is null) return null;
+            List<Gift> dtoGifts = new();
+            foreach (Data.Gift gift in gifts)
+            {
+               dtoGifts.Add(ToDto(gift)); 
+            }
+
+            return dtoGifts;
         }
 
         public static Data.Gift? FromDto(Gift? gift)
@@ -33,8 +47,20 @@
                 Description = gift.Description,
                 Url = gift.Url,
                 Priority = gift.Priority,
-                Receiver = gift.Receiver
+                Receiver = User.FromDto(gift.Receiver)
             };
+        }
+
+        public static List<Data.Gift?> FromDtos(List<Gift?> dtoGifts)
+        {
+            if (dtoGifts is null) return null;
+            List<Data.Gift> gifts = new();
+            foreach (Gift dtoGift in dtoGifts)
+            {
+               gifts.Add(FromDto(dtoGift)); 
+            }
+
+            return gifts;
         }
     }
 }

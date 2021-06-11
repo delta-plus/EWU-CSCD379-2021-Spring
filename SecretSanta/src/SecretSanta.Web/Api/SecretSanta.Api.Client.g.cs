@@ -40,11 +40,11 @@ namespace SecretSanta.Web.Api
         System.Threading.Tasks.Task<Group> GetAsync(int id, System.Threading.CancellationToken cancellationToken);
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task DeleteAsync(int id, int? groupId);
+        System.Threading.Tasks.Task DeleteAsync(int id);
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task DeleteAsync(int id, int? groupId, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task DeleteAsync(int id, System.Threading.CancellationToken cancellationToken);
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task PutAsync(int id, UpdateGroup group);
@@ -340,26 +340,21 @@ namespace SecretSanta.Web.Api
         }
     
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task DeleteAsync(int id, int? groupId)
+        public System.Threading.Tasks.Task DeleteAsync(int id)
         {
-            return DeleteAsync(id, groupId, System.Threading.CancellationToken.None);
+            return DeleteAsync(id, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task DeleteAsync(int id, int? groupId, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task DeleteAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
     
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/Groups/{id}?");
+            urlBuilder_.Append("api/Groups/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
-            if (groupId != null)
-            {
-                urlBuilder_.Append(System.Uri.EscapeDataString("groupId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(groupId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
-            urlBuilder_.Length--;
     
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1510,6 +1505,36 @@ namespace SecretSanta.Web.Api
         [Newtonsoft.Json.JsonProperty("lastName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LastName { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("gifts", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<Gift> Gifts { get; set; } = new System.Collections.ObjectModel.Collection<Gift>();
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class Gift 
+    {
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
+        public int Id { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Title { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Description { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("url", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Url { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("priority", Required = Newtonsoft.Json.Required.Always)]
+        public int Priority { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("receiver", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public User Receiver { get; set; } = new User();
+    
     
     }
     
@@ -1575,6 +1600,10 @@ namespace SecretSanta.Web.Api
     
         [Newtonsoft.Json.JsonProperty("lastName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string LastName { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("gifts", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.ICollection<Gift> Gifts { get; set; } = new System.Collections.ObjectModel.Collection<Gift>();
     
     
     }

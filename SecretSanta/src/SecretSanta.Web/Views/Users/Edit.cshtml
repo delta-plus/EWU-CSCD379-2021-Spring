@@ -13,19 +13,23 @@
         <div class="grid grid-cols-1 gap-4">
             <div>
                 <label class="text-gray-500 font-bold text-right" for="Title">Title</label>
-                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="text" id="Title" name="Title"/>
+                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="text" 
+                  id="Title" name="Title" x-model="gift.title"/>
             </div>
             <div>
                 <label class="text-gray-500 font-bold text-right" for="Description">Description</label>
-                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="text" id="Description" name="Description" />
+                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="text" 
+                  id="Description" name="Description" x-model="gift.description"/>
             </div>
             <div>
                 <label class="text-gray-500 font-bold text-right" for="Url">URL</label>
-                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="text" id="Url" name="Url" />
+                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="text" 
+                  id="Url" name="Url" x-model="gift.url"/>
             </div>
             <div>
                 <label class="text-gray-500 font-bold text-right" for="Priority">Priority</label>
-                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="number" id="Priority" name="Priority" />
+                <input class="w-full border-b-2 border-green-300 focus:border-green-600 focus:ring-transparent focus:outline-none" type="number" 
+                  id="Priority" name="Priority" x-model="gift.priority"/>
             </div>
         </div>
     </div>

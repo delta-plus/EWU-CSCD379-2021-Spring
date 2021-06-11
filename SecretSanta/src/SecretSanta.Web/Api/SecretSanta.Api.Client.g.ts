@@ -13,7 +13,7 @@ export interface IGroupsClient {
     getAll(): Promise<Group[]>;
     post(group: Group): Promise<Group>;
     get(id: number): Promise<Group>;
-    delete(id: number, groupId: number | undefined): Promise<void>;
+    delete(id: number): Promise<void>;
     put(id: number, group: UpdateGroup): Promise<void>;
     remove(id: number, userId: number): Promise<void>;
     add(id: number, userId: number): Promise<void>;
@@ -191,15 +191,11 @@ export class GroupsClient implements IGroupsClient {
         return Promise.resolve<Group>(<any>null);
     }
 
-    delete(id: number, groupId: number | undefined , cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Groups/{id}?";
+    delete(id: number , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Groups/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (groupId === null)
-            throw new Error("The parameter 'groupId' cannot be null.");
-        else if (groupId !== undefined)
-            url_ += "groupId=" + encodeURIComponent("" + groupId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -852,6 +848,7 @@ export class User implements IUser {
     id!: number;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    gifts!: Gift[];
 
     constructor(data?: IUser) {
         if (data) {
@@ -860,6 +857,9 @@ export class User implements IUser {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        if (!data) {
+            this.gifts = [];
+        }
     }
 
     init(_data?: any) {
@@ -867,6 +867,11 @@ export class User implements IUser {
             this.id = _data["id"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            if (Array.isArray(_data["gifts"])) {
+                this.gifts = [] as any;
+                for (let item of _data["gifts"])
+                    this.gifts!.push(Gift.fromJS(item));
+            }
         }
     }
 
@@ -882,6 +887,11 @@ export class User implements IUser {
         data["id"] = this.id;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        if (Array.isArray(this.gifts)) {
+            data["gifts"] = [];
+            for (let item of this.gifts)
+                data["gifts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -890,6 +900,66 @@ export interface IUser {
     id: number;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    gifts: Gift[];
+}
+
+export class Gift implements IGift {
+    id!: number;
+    title!: string;
+    description?: string | undefined;
+    url?: string | undefined;
+    priority!: number;
+    receiver!: User;
+
+    constructor(data?: IGift) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.receiver = new User();
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.url = _data["url"];
+            this.priority = _data["priority"];
+            this.receiver = _data["receiver"] ? User.fromJS(_data["receiver"]) : new User();
+        }
+    }
+
+    static fromJS(data: any): Gift {
+        data = typeof data === 'object' ? data : {};
+        let result = new Gift();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["url"] = this.url;
+        data["priority"] = this.priority;
+        data["receiver"] = this.receiver ? this.receiver.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IGift {
+    id: number;
+    title: string;
+    description?: string | undefined;
+    url?: string | undefined;
+    priority: number;
+    receiver: User;
 }
 
 export class Assignment implements IAssignment {
@@ -1039,6 +1109,7 @@ export interface IUpdateGroup {
 export class UpdateUser implements IUpdateUser {
     firstName?: string | undefined;
     lastName?: string | undefined;
+    gifts!: Gift[];
 
     constructor(data?: IUpdateUser) {
         if (data) {
@@ -1047,12 +1118,20 @@ export class UpdateUser implements IUpdateUser {
                     (<any>this)[property] = (<any>data)[property];
             }
         }
+        if (!data) {
+            this.gifts = [];
+        }
     }
 
     init(_data?: any) {
         if (_data) {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            if (Array.isArray(_data["gifts"])) {
+                this.gifts = [] as any;
+                for (let item of _data["gifts"])
+                    this.gifts!.push(Gift.fromJS(item));
+            }
         }
     }
 
@@ -1067,6 +1146,11 @@ export class UpdateUser implements IUpdateUser {
         data = typeof data === 'object' ? data : {};
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        if (Array.isArray(this.gifts)) {
+            data["gifts"] = [];
+            for (let item of this.gifts)
+                data["gifts"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -1074,6 +1158,7 @@ export class UpdateUser implements IUpdateUser {
 export interface IUpdateUser {
     firstName?: string | undefined;
     lastName?: string | undefined;
+    gifts: Gift[];
 }
 
 export class ApiException extends Error {

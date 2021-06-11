@@ -38,9 +38,9 @@ namespace SecretSanta.Api.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public ActionResult Delete(int id, int groupId)
+        public ActionResult Delete(int id)
         {
-            if (GroupRepository.Remove(id, groupId))
+            if (GroupRepository.Remove(id))
             {
                 return Ok();
             }
